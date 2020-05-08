@@ -681,13 +681,15 @@ static void _RXLargeMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
 
     if( ( pEventParam->xEventType == eBLEWrite ) || ( pEventParam->xEventType == eBLEWriteNoResponse ) )
     {
-        pService = _getServiceFromHandle( pEventParam->pParamWrite->attrHandle );
+        IotLogError( "Received message on RX large char length = %d.", pEventParam->pParamWrite->length );
+	
+	pService = _getServiceFromHandle( pEventParam->pParamWrite->attrHandle );
 
         if( ( pService != NULL ) &&
             ( pService->channel.isOpen ) )
         {
             status = _resizeChannelBuffer( &pService->channel.lotBuffer, IOT_BLE_DATA_TRANSFER_RX_BUFFER_SIZE, pEventParam->pParamWrite->length );
-
+        
             if( status == true )
             {
                 /* Copy the received data into the buffer. */
@@ -697,10 +699,14 @@ static void _RXLargeMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
 
                 pService->channel.lotBuffer.head += pEventParam->pParamWrite->length;
 
+		IotLogError("Large object length = %d",pService->channel.lotBuffer.head);
+
                 if( pEventParam->pParamWrite->length < transmitLength )
                 {
                     /* All chunks for large object transfer received. */
                     pService->channel.pReceiveBuffer = &pService->channel.lotBuffer;
+		    
+		    IotLogError( "All objects received");
 
                     if( pService->channel.callback != NULL )
                     {
@@ -708,6 +714,7 @@ static void _RXLargeMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
                                                     &pService->channel,
                                                     pService->channel.pContext );
                     }
+
                 }
 
                 resp.eventStatus = eBTStatusSuccess;
