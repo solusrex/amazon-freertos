@@ -340,6 +340,7 @@ wiced_bt_gatt_status_t prvGattsReqCb( wiced_bt_gatt_attribute_request_t *p_data 
 
         case GATTS_REQ_TYPE_WRITE_REQ:
         case GATTS_REQ_TYPE_PREP_WRITE:
+	  configPRINTF(("Received write request type: %d, len = %d\n",  p_data->request_type, p_data->data.write_req.val_len));
           data_ptr = (wiced_bt_gatt_attribute_request_t*)pvPortMalloc(sizeof(wiced_bt_gatt_attribute_request_t) + p_data->data.write_req.val_len);
           write_data_ptr = data_ptr + 1;
           memcpy(data_ptr, p_data, sizeof(wiced_bt_gatt_attribute_request_t));
@@ -774,6 +775,7 @@ BTStatus_t prvBTSendIndication( uint8_t ucServerIf,
  {
    uint16_t *scratch_buff = (uint16_t *)arg;
 
+   configPRINTF(("Send a response for request.\n"));
     /* Trigger callbcak here for notification packets only */
     if ( xGattServerCb.pxResponseConfirmationCb )
     {
