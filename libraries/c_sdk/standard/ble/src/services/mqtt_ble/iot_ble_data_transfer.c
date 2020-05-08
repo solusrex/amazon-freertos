@@ -37,11 +37,7 @@
 #include "platform/iot_threads.h"
 
 /* Configure logs for the functions in this file. */
-#ifdef IOT_LOG_LEVEL_GLOBAL
-    #define LIBRARY_LOG_LEVEL    IOT_LOG_LEVEL_GLOBAL
-#else
-    #define LIBRARY_LOG_LEVEL    IOT_LOG_NONE
-#endif
+#define LIBRARY_LOG_LEVEL   IOT_LOG_LEVEL_DEBUG
 
 #define LIBRARY_LOG_NAME         ( "BLE_TXRX" )
 #include "iot_logging_setup.h"
@@ -753,6 +749,7 @@ static void _RXMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
 
     if( ( pEventParam->xEventType == eBLEWrite ) || ( pEventParam->xEventType == eBLEWriteNoResponse ) )
     {
+	IotLogError("Received message on RX char length = %d", pEventParam->pParamWrite->length);
         pService = _getServiceFromHandle( pEventParam->pParamWrite->attrHandle );
 
         if( ( pService != NULL ) &&
