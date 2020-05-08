@@ -32,6 +32,8 @@
 #include "iot_config.h"
 #include "iot_ble_config.h"
 
+#include "FreeRTOS.h"
+
 #include "iot_ble.h"
 #include "iot_ble_data_transfer.h"
 #include "platform/iot_threads.h"
@@ -677,7 +679,7 @@ static void _RXLargeMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
 
     if( ( pEventParam->xEventType == eBLEWrite ) || ( pEventParam->xEventType == eBLEWriteNoResponse ) )
     {
-        IotLogError( "Received message on RX large char length = %d.", pEventParam->pParamWrite->length );
+        configPRINTF(( "Received message on RX large char length = %d.\n", pEventParam->pParamWrite->length ));
 	
 	pService = _getServiceFromHandle( pEventParam->pParamWrite->attrHandle );
 
@@ -695,14 +697,14 @@ static void _RXLargeMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
 
                 pService->channel.lotBuffer.head += pEventParam->pParamWrite->length;
 
-		IotLogError("Large object length = %d",pService->channel.lotBuffer.head);
+		configPRINTF(("Large object length = %d\n",pService->channel.lotBuffer.head));
 
                 if( pEventParam->pParamWrite->length < transmitLength )
                 {
                     /* All chunks for large object transfer received. */
                     pService->channel.pReceiveBuffer = &pService->channel.lotBuffer;
 		    
-		    IotLogError( "All objects received");
+		    configPRINTF(( "All objects received\n"));
 
                     if( pService->channel.callback != NULL )
                     {
@@ -749,7 +751,7 @@ static void _RXMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
 
     if( ( pEventParam->xEventType == eBLEWrite ) || ( pEventParam->xEventType == eBLEWriteNoResponse ) )
     {
-	IotLogError("Received message on RX char length = %d", pEventParam->pParamWrite->length);
+	configPRINTF(("Received message on RX char length = %d\n", pEventParam->pParamWrite->length));
         pService = _getServiceFromHandle( pEventParam->pParamWrite->attrHandle );
 
         if( ( pService != NULL ) &&
