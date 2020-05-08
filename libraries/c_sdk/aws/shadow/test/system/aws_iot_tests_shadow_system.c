@@ -75,7 +75,7 @@
     #define IOT_TEST_MQTT_SHORT_KEEPALIVE_INTERVAL_S    ( 30 )
 #endif
 #ifndef AWS_IOT_TEST_SHADOW_TIMEOUT
-    #define AWS_IOT_TEST_SHADOW_TIMEOUT                 ( 5000 )
+    #define AWS_IOT_TEST_SHADOW_TIMEOUT                 ( 10000 )
 #endif
 /** @endcond */
 

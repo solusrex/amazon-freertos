@@ -60,7 +60,7 @@
  * Provide default values of test configuration constants.
  */
 #ifndef IOT_TEST_MQTT_TIMEOUT_MS
-    #define IOT_TEST_MQTT_TIMEOUT_MS                     ( 5000 )
+    #define IOT_TEST_MQTT_TIMEOUT_MS                     ( 10000 )
 #endif
 #ifndef IOT_TEST_MQTT_TOPIC_PREFIX
     #define IOT_TEST_MQTT_TOPIC_PREFIX                   "iotmqtttest"
