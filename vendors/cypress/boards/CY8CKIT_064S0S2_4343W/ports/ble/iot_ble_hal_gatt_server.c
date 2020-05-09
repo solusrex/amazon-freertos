@@ -775,7 +775,7 @@ BTStatus_t prvBTSendIndication( uint8_t ucServerIf,
  {
    uint16_t *scratch_buff = (uint16_t *)arg;
 
-   configPRINTF(("Send a response for request.\n"));
+   configPRINTF(("Send a response for request, status = %d\n", scratch_buff[0]));
     /* Trigger callbcak here for notification packets only */
     if ( xGattServerCb.pxResponseConfirmationCb )
     {

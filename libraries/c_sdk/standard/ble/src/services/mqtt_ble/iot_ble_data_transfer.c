@@ -675,7 +675,7 @@ static void _RXLargeMesgCharCallback( IotBleAttributeEvent_t * pEventParam )
         .attrDataOffset = 0
     };
     IotBleDataTransferService_t * pService;
-    bool status = false;
+    uint8_t status = 1;
 
     if( ( pEventParam->xEventType == eBLEWrite ) || ( pEventParam->xEventType == eBLEWriteNoResponse ) )
     {
