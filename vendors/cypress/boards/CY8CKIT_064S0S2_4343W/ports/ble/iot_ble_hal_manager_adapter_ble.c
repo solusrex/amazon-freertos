@@ -469,6 +469,8 @@ BTTransport_t prvBTGetDeviceType( const BTBdaddr_t * pxBdAddr )
 
 /*-----------------------------------------------------------*/
 
+static uint8_t slave_itvl_range[ 4 ];
+
 BTStatus_t prvBTSetAdvData( uint8_t ucAdapterIf,
                             BTGattAdvertismentParams_t * pxParams,
                             uint16_t usManufacturerLen,
@@ -497,6 +499,8 @@ BTStatus_t prvBTSetAdvData( uint8_t ucAdapterIf,
     ( pxServiceUuid ) ? ( ucAdvElemCnt += xNbServices ) : 0;
     ( pcServiceData && usServiceDataLen ) ? ucAdvElemCnt++ : 0;
     ( pcManufacturerData && usManufacturerLen) ? ucAdvElemCnt++ : 0;
+    ( pxParams->ulMinInterval && pxParams->ulMaxInterval ) ? ucAdvElemCnt++ : 0;
+	
 
     pxAdvElem = (wiced_bt_ble_advert_elem_t*) pvPortMalloc( sizeof(wiced_bt_ble_advert_elem_t) * ucAdvElemCnt );
     if ( NULL == pxAdvElem )
@@ -600,6 +604,19 @@ BTStatus_t prvBTSetAdvData( uint8_t ucAdapterIf,
             uiAdvParamLen += pxAdvElem->len;
         }
     }
+    
+    if(pxParams->ulMinInterval && pxParams->ulMaxInterval)
+    {
+        slave_itvl_range[ 0 ] = ( pxParams->ulMinInterval ) & 0xFF;
+        slave_itvl_range[ 1 ] = ( pxParams->ulMinInterval >> 8 ) & 0xFF;
+        slave_itvl_range[ 2 ] = ( pxParams->ulMaxInterval ) & 0xFF;
+        slave_itvl_range[ 3 ] = ( pxParams->ulMaxInterval >> 8 ) & 0xFF;
+		pxAdvElem->advert_type = BTM_BLE_ADVERT_TYPE_INTERVAL_RANGE;
+		pxAdvElem->len = 4;
+        pxAdvElem->p_data = slave_itvl_range;
+        pxAdvElem++;
+        uiAdvParamLen += pxAdvElem->len;
+    }
 
     pxAdvElem->advert_type = BTM_BLE_ADVERT_TYPE_FLAG;
     pxAdvElem->len = 1;
@@ -627,11 +644,6 @@ BTStatus_t prvBTSetAdvData( uint8_t ucAdapterIf,
         }
       else
         {
-            if(pxParams->ulMinInterval && pxParams->ulMaxInterval)
-            {
-                p_adv_cfg->low_duty_min_interval = pxParams->ulMinInterval;
-                p_adv_cfg->low_duty_max_interval = pxParams->ulMaxInterval;
-            }
 
             p_adv_cfg->low_duty_duration = pxParams->usTimeout;
             p_adv_cfg->channel_map = pxParams->ucChannelMap;
