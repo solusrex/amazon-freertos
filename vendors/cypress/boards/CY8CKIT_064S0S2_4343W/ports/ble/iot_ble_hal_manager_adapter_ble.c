@@ -645,6 +645,12 @@ BTStatus_t prvBTSetAdvData( uint8_t ucAdapterIf,
       else
         {
 
+            if(pxParams->ulMinInterval && pxParams->ulMaxInterval)
+            {
+                p_adv_cfg->low_duty_min_interval = pxParams->ulMinInterval;
+                p_adv_cfg->low_duty_max_interval = pxParams->ulMaxInterval;
+            }
+
             p_adv_cfg->low_duty_duration = pxParams->usTimeout;
             p_adv_cfg->channel_map = pxParams->ucChannelMap;
 
