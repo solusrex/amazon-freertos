@@ -220,7 +220,7 @@ int UTILS_TimespecAdd( const struct timespec * const x,
             /* check for overflow */
             if( pxResult->tv_sec < 0 )
             {
-                configPRINT( ( "Execution determines tv_sec is < 0\n" ) );
+                /* configPRINT_STRING( ( "Execution determines tv_sec is < 0\n" ) ); */
 
                 iStatus = 1;
 
@@ -228,7 +228,7 @@ int UTILS_TimespecAdd( const struct timespec * const x,
             }
             else
             {
-                configPRINT( ( "Execution determines tv_sec is > 0\n" ) );
+                /* configPRINT_STRING( ( "Execution determines tv_sec is > 0\n" ) ); */
                 configPRINTF( ( " tv_sec as signed: %d tv_sec as unsigned: %u\n",
                                 pxResult->tv_sec, pxResult->tv_sec ) );
                 /* code */
