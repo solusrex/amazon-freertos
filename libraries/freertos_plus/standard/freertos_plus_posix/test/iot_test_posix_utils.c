@@ -105,6 +105,7 @@ TEST( Full_POSIX_UTILS, UTILS_TimespecAdd )
     x.tv_nsec = 0;
     y.tv_sec = -6;
     y.tv_nsec = 100000000;
+    xResult.tv_nsec = 0;
     TEST_ASSERT_EQUAL_INT( 1, UTILS_TimespecAdd( &x, &y, &xResult ) );
     TEST_ASSERT_EQUAL_INT( -1, xResult.tv_sec );
     TEST_ASSERT_EQUAL_INT( 100000000, xResult.tv_nsec );
