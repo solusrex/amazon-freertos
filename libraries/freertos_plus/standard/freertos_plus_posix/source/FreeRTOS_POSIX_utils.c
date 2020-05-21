@@ -218,7 +218,7 @@ int UTILS_TimespecAdd( const struct timespec * const x,
                             pxResult->tv_nsec, pxResult->tv_sec ) );
 
             /* check for overflow */
-            if( pxResult->tv_sec < 0 )
+            if( pxResult->tv_sec < ( signed int ) 0 )
             {
                 /* configPRINT_STRING( ( "Execution determines tv_sec is < 0\n" ) ); */
 
