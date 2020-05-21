@@ -41,10 +41,10 @@
 #define posixconfigENABLE_USECONDS_T    0
 /* Microchip -mnewlib compiler option supports these types. */
 #define posixconfigENABLE_TIMESPEC      1
-#define posixconfigENABLE_ITIMERSPEC    0
-#define posixconfigENABLE_CLOCKID_T     0
-#define posixconfigENABLE_TIME_T        0
-#define posixconfigENABLE_TIMER_T       0
+#define posixconfigENABLE_ITIMERSPEC    1
+#define posixconfigENABLE_CLOCKID_T     1
+#define posixconfigENABLE_TIME_T        1
+#define posixconfigENABLE_TIMER_T       1
 
 
 #endif /* _FREERTOS_POSIX_PORTABLE_H_ */
