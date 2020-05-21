@@ -200,7 +200,7 @@ int UTILS_TimespecAdd( const struct timespec * const x,
         /* Perform addition. */
         pxResult->tv_nsec = x->tv_nsec + y->tv_nsec;
 
-        configPRINTF( ( "Values after nsec addition: tv_nsec=%ld, tv_sec=%d\n",
+        configPRINTF( ( "Values after nsec addition: tv_nsec=%ld, tv_sec=%u\n",
                         pxResult->tv_nsec, pxResult->tv_sec ) );
 
         /* check for overflow in case nsec value was invalid */
@@ -214,7 +214,7 @@ int UTILS_TimespecAdd( const struct timespec * const x,
             pxResult->tv_nsec = ( pxResult->tv_nsec ) % NANOSECONDS_PER_SECOND;
             pxResult->tv_sec = x->tv_sec + y->tv_sec + llPartialSec;
 
-            configPRINTF( ( "Values after sec addition: tv_nsec=%ld, tv_sec=%d\n",
+            configPRINTF( ( "Values after sec addition: tv_nsec=%ld, tv_sec=%u\n",
                             pxResult->tv_nsec, pxResult->tv_sec ) );
 
             /* check for overflow */
