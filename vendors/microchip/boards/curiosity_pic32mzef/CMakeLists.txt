@@ -25,7 +25,7 @@ endif()
 afr_mcu_port(compiler)
 
 # Compiler flags
-set(c_flags -g -x c -ffunction-sections -O1 -mprocessor=32MZ2048EFM100 -std=gnu99 -fgnu89-inline)
+set(c_flags -g -x c -ffunction-sections -O1 -mprocessor=32MZ2048EFM100 -mnewlib-libc -std=gnu99 -fgnu89-inline)
 set(asm_flags -mprocessor=32MZ2048EFM100 -MMD -MF  -Wa$<COMMA>--gdwarf-2)
 target_compile_options(
     AFR::compiler::mcu_port
@@ -39,7 +39,7 @@ set(linker_flags -Wl,--script=\"${board_dir}/application_code/microchip_code/app
 
 target_link_options(
     AFR::compiler::mcu_port
-    INTERFACE -mprocessor=32MZ2048EFM100 -DXPRJ_pic32mz_ef_curiosity=pic32mz_ef_curiosity -no-legacy-libc ${linker_flags}
+    INTERFACE -mprocessor=32MZ2048EFM100 -mnewlib-libc -DXPRJ_pic32mz_ef_curiosity=pic32mz_ef_curiosity -no-legacy-libc ${linker_flags}
 )
 
 # -------------------------------------------------------------------------------------------------
