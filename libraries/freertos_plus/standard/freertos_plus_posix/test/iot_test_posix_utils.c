@@ -75,9 +75,9 @@ TEST_GROUP_RUNNER( Full_POSIX_UTILS )
 
 TEST( Full_POSIX_UTILS, UTILS_TimespecAdd )
 {
-    /* struct timespec xResult = { .tv_sec = 0, .tv_nsec = 0 }; */
-    /* struct timespec x = { .tv_sec = 0, .tv_nsec = 0 }; */
-    /* struct timespec y = { .tv_sec = 0, .tv_nsec = 0 }; */
+    struct timespec xResult = { .tv_sec = 0, .tv_nsec = 0 };
+    struct timespec x = { .tv_sec = 0, .tv_nsec = 0 };
+    struct timespec y = { .tv_sec = 0, .tv_nsec = 0 };
 
     /* / * Check return value with NULL parameters. * / */
     /* TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, &y, NULL ) ); */
