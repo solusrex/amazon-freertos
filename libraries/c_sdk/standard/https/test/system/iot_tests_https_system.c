@@ -581,8 +581,8 @@ TEST_GROUP_RUNNER( HTTPS_Client_System )
     /* RUN_TEST_CASE( HTTPS_Client_System, PutRequestSynchronousNonPersistent ); */
     /* RUN_TEST_CASE( HTTPS_Client_System, PutRequestAsynchronousPersistent ); */
     /* RUN_TEST_CASE( HTTPS_Client_System, PutRequestAsynchronousNonPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, PostRequestSynchronousPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, PostRequestSynchronousNonPersistent ); */
+    RUN_TEST_CASE( HTTPS_Client_System, PostRequestSynchronousPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, PostRequestSynchronousNonPersistent );
     RUN_TEST_CASE( HTTPS_Client_System, PostRequestAsynchronousPersistent );
     RUN_TEST_CASE( HTTPS_Client_System, PostRequestAsynchronousNonPersistent );
 }
