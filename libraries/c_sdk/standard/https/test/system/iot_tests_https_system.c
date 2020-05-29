@@ -569,14 +569,14 @@ TEST_TEAR_DOWN( HTTPS_Client_System )
   */
 TEST_GROUP_RUNNER( HTTPS_Client_System )
 {
-    /* RUN_TEST_CASE( HTTPS_Client_System, GetRequestSynchronousPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, GetRequestSynchronousNonPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, GetRequestAsynchronousPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, GetRequestAsynchronousNonPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, HeadRequestSynchronousPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, HeadRequestSynchronousNonPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, HeadRequestAsynchronousPersistent ); */
-    /* RUN_TEST_CASE( HTTPS_Client_System, HeadRequestAsynchronousNonPersistent ); */
+    RUN_TEST_CASE( HTTPS_Client_System, GetRequestSynchronousPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, GetRequestSynchronousNonPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, GetRequestAsynchronousPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, GetRequestAsynchronousNonPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, HeadRequestSynchronousPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, HeadRequestSynchronousNonPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, HeadRequestAsynchronousPersistent );
+    RUN_TEST_CASE( HTTPS_Client_System, HeadRequestAsynchronousNonPersistent );
     /* RUN_TEST_CASE( HTTPS_Client_System, PutRequestSynchronousPersistent ); */
     /* RUN_TEST_CASE( HTTPS_Client_System, PutRequestSynchronousNonPersistent ); */
     /* RUN_TEST_CASE( HTTPS_Client_System, PutRequestAsynchronousPersistent ); */
