@@ -375,10 +375,12 @@ static void _testRequestSynchronous( bool isNonPersistent,
     respInfo.pSyncInfo = &syncRespInfo;
 
     /* Initialize the request. */
+    configPRINTF( ( "%s\n", "Calling InitializeRequest" ) );
     returnCode = IotHttpsClient_InitializeRequest( &reqHandle, &reqInfo );
     TEST_ASSERT_EQUAL( IOT_HTTPS_OK, returnCode );
 
     /* Create the HTTPS connection. */
+    configPRINTF( ( "%s\n", "Calling Connect" ) );
     RETRY_EXPONENTIAL( returnCode = IotHttpsClient_Connect( &connHandle, &_connInfo ),
                        IOT_HTTPS_OK,
                        IOT_TEST_HTTPS_INITIAL_CONNECTION_RETRY_DELAY,
@@ -386,6 +388,7 @@ static void _testRequestSynchronous( bool isNonPersistent,
     TEST_ASSERT_EQUAL( IOT_HTTPS_OK, returnCode );
 
     /* Send the HTTPS request. */
+    configPRINTF( ( "%s\n", "Calling SendSync" ) );
     returnCode = IotHttpsClient_SendSync( connHandle, reqHandle, &respHandle, &respInfo, IOT_TEST_HTTPS_SYNC_TIMEOUT_MS );
     TEST_ASSERT_EQUAL( IOT_HTTPS_OK, returnCode );
 
