@@ -1,35 +1,35 @@
 /*
-  * FreeRTOS POSIX V1.1.3
-  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a copy of
-  * this software and associated documentation files (the "Software"), to deal in
-  * the Software without restriction, including without limitation the rights to
-  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-  * the Software, and to permit persons to whom the Software is furnished to do so,
-  * subject to the following conditions:
-  *
-  * The above copyright notice and this permission notice shall be included in all
-  * copies or substantial portions of the Software.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  *
-  * http://aws.amazon.com/freertos
-  * http://www.FreeRTOS.org
-  */
+ * FreeRTOS POSIX V1.1.3
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
+ */
 
 /**
-  * @file iot_test_posix_utils.c
-  * @brief Tests for POSIX utility functions.
-  *
-  * Some utility functions are considered adequately tested by other functions
-  * and therefore aren't tested here.
-  */
+ * @file iot_test_posix_utils.c
+ * @brief Tests for POSIX utility functions.
+ *
+ * Some utility functions are considered adequately tested by other functions
+ * and therefore aren't tested here.
+ */
 
 /* C standard library includes. */
 #include <string.h>
@@ -44,13 +44,25 @@
 #include "unity_fixture.h"
 #include "unity.h"
 
+/*-----------------------------------------------------------*/
+/* Constants that represent max values for signed and unsigned definitions of time_t */
+#define TIME_T_SIGNED_MAX      ( time_t ) ( ( ( time_t ) 1 << ( ( sizeof( time_t ) << 3 ) - 1 ) ) - 1 )
+#define TIME_T_UNSIGNED_MAX    ( ( time_t ) ~0 )
+
+static const struct timespec signedCheck = { .tv_sec = 1, .tv_nsec = 1 };
+static uint8_t isTimespecTvSecSigned;
+
+/*-----------------------------------------------------------*/
+
 TEST_GROUP( Full_POSIX_UTILS );
 
 /*-----------------------------------------------------------*/
 
 TEST_SETUP( Full_POSIX_UTILS )
 {
+    isTimespecTvSecSigned = ( ~signedCheck.tv_sec < 0 ) ? 1u : 0u;
 }
+
 
 /*-----------------------------------------------------------*/
 
@@ -63,12 +75,13 @@ TEST_TEAR_DOWN( Full_POSIX_UTILS )
 TEST_GROUP_RUNNER( Full_POSIX_UTILS )
 {
     RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecAdd );
-    /* RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecSubtract ); */
-    /* RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecAddNanoseconds ); */
-    /* RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_strnlen ); */
-    /* RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecCompare ); */
-    /* RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecToTicks ); */
-    /* RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_AbsoluteTimespecToDeltaTicks ) */
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecAdd_Overflow );
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecSubtract );
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecAddNanoseconds );
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_strnlen );
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecCompare );
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_TimespecToTicks );
+    RUN_TEST_CASE( Full_POSIX_UTILS, UTILS_AbsoluteTimespecToDeltaTicks )
 }
 
 /*-----------------------------------------------------------*/
@@ -83,6 +96,31 @@ TEST( Full_POSIX_UTILS, UTILS_TimespecAdd )
     TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, &y, NULL ) );
     TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( NULL, &y, &xResult ) );
     TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, NULL, &xResult ) );
+
+    /* Test with invalid parameter check when tv_sec < 0. */
+    if( isTimespecTvSecSigned == 1u )
+    {
+        x.tv_sec = -1;
+        TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, &y, NULL ) );
+
+        x.tv_sec = 0;
+        y.tv_sec = -2;
+        TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, &y, NULL ) );
+    }
+
+    /* Test with invalid parameter check when tv_nsec < 0. */
+    if( isTimespecTvSecSigned == 1u )
+    {
+        x.tv_sec = 0;
+        y.tv_sec = 0;
+
+        x.tv_nsec = -1;
+        TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, &y, NULL ) );
+
+        x.tv_nsec = 0;
+        y.tv_nsec = -2;
+        TEST_ASSERT_EQUAL_INT( -1, UTILS_TimespecAdd( &x, &y, NULL ) );
+    }
 
     /* Simple timespec add. */
     x.tv_sec = 1;
@@ -100,33 +138,48 @@ TEST( Full_POSIX_UTILS, UTILS_TimespecAdd )
     TEST_ASSERT_EQUAL_INT( 1, xResult.tv_sec );
     TEST_ASSERT_EQUAL_INT( 200000000, xResult.tv_nsec );
 
-    /* Add timespec with negative y. */
-    x.tv_sec = 5;
-    x.tv_nsec = 0;
-    y.tv_sec = -6;
-    y.tv_nsec = 100;
-    TEST_ASSERT_EQUAL_INT( 1, UTILS_TimespecAdd( &x, &y, &xResult ) );
-    TEST_ASSERT_EQUAL_INT( -1, xResult.tv_sec );
-    TEST_ASSERT_EQUAL_INT( 100, xResult.tv_nsec );
+    /* Test for correct xResult even with pointer aliasing. */
+    x.tv_sec = x.tv_nsec = 5;
+    TEST_ASSERT_EQUAL_INT( 0, UTILS_TimespecAdd( &x, &x, &x ) );
+    TEST_ASSERT_EQUAL_INT( 10, x.tv_sec );
+    TEST_ASSERT_EQUAL_INT( 10, x.tv_nsec );
+}
 
-    /* Add non-compliant timespec where y.tv_nsec < 0. */
-    x.tv_sec = y.tv_sec = 1;
-    x.tv_nsec = 100000000;
-    y.tv_nsec = -2100000000;
-    /* should return 1 for negative value */
-    TEST_ASSERT_EQUAL_INT( 1, UTILS_TimespecAdd( &x, &y, &xResult ) );
+
+/* Add timespec with values resulting in overflow. */
+TEST( Full_POSIX_UTILS, UTILS_TimespecAdd_Overflow )
+{
+    struct timespec xResult = { .tv_sec = 0, .tv_nsec = 0 };
+    struct timespec x = { .tv_sec = 0, .tv_nsec = 0 };
+    struct timespec y = { .tv_sec = 0, .tv_nsec = 0 };
+
+    /* Note: An overflow occurrence depends on the signedness of the
+     * underlying type of timespec.tv_sec member. Thus, we have different
+     * tests between platforms that use signed and unsigned types for
+     * timespec.tv_sec. */
+    if( isTimespecTvSecSigned )
+    {
+        x.tv_sec = TIME_T_SIGNED_MAX;
+        y.tv_sec = 2;
+        y.tv_nsec = 100000000;
+        TEST_ASSERT_EQUAL_INT( 1, UTILS_TimespecAdd( &x, &y, &xResult ) );
+        TEST_ASSERT_EQUAL_INT( 100000000, xResult.tv_nsec );
+    }
+    else
+    {
+        /* timespec.tv_sec is of unsigned type. */
+        x.tv_sec = TIME_T_UNSIGNED_MAX;
+        y.tv_sec = 2;
+        y.tv_nsec = 100000000;
+        TEST_ASSERT_EQUAL_INT( 1, UTILS_TimespecAdd( &x, &y, &xResult ) );
+        TEST_ASSERT_EQUAL_INT( 100000000, xResult.tv_nsec );
+    }
 
     /* Add non-compliant timespec where y.tv_nsec > 1 billion. */
     x.tv_sec = y.tv_sec = 0;
     x.tv_nsec = y.tv_nsec = 2100000000;
     /* Overflow should be indicated by returning 1 */
     TEST_ASSERT_EQUAL_INT( 1, UTILS_TimespecAdd( &x, &y, &xResult ) );
-
-    /* Test for correct xResult even with pointer aliasing. */
-    x.tv_sec = x.tv_nsec = 5;
-    TEST_ASSERT_EQUAL_INT( 0, UTILS_TimespecAdd( &x, &x, &x ) );
-    TEST_ASSERT_EQUAL_INT( 10, x.tv_sec );
-    TEST_ASSERT_EQUAL_INT( 10, x.tv_nsec );
 }
 
 /*-----------------------------------------------------------*/
