@@ -39,7 +39,7 @@
 /* Uncomment one of these definitions to override the log level configuration for
  * a specific library. */
 /*#define IOT_LOG_LEVEL_PLATFORM               IOT_LOG_INFO */
-/*#define IOT_LOG_LEVEL_NETWORK                IOT_LOG_INFO */
+#define IOT_LOG_LEVEL_NETWORK    IOT_LOG_DEBUG
 /*#define IOT_LOG_LEVEL_MQTT                   IOT_LOG_INFO */
 /*#define AWS_IOT_LOG_LEVEL_SHADOW             IOT_LOG_INFO */
 /* #define IOT_LOG_LEVEL_DEMO                   IOT_LOG_INFO */
