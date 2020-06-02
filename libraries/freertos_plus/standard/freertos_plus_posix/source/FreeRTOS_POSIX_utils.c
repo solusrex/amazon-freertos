@@ -198,22 +198,15 @@ int UTILS_TimespecAdd( const struct timespec * const x,
         iStatus = -1;
     }
 
-    configPRINTF( ( "Input tv_sec values: x->tv_sec: %u, y->tv_sec:%u",
-                    x->tv_sec, y->tv_sec ) );
-
     if( iStatus == 0 )
     {
         /* Perform addition for the nanoseconds member. */
         pxResult->tv_nsec = x->tv_nsec + y->tv_nsec;
 
-        configPRINTF( ( "Values after nsec addition: tv_nsec=%ld, tv_sec=%d\n",
-                        pxResult->tv_nsec, pxResult->tv_sec ) );
-
         /* Check if the addition resulted in an overflow.*/
         if( ( pxResult->tv_nsec < x->tv_nsec ) || ( pxResult->tv_nsec < y->tv_nsec ) )
         {
             iStatus = 1;
-            configPRINTF( ( "Detected overflow in tv_nsec: ReturnStatus=%d", iStatus ) );
         }
         else
         {
@@ -224,9 +217,6 @@ int UTILS_TimespecAdd( const struct timespec * const x,
             /* Perform addition for the seconds member. */
             pxResult->tv_sec = x->tv_sec + y->tv_sec + ullPartialSec;
 
-            configPRINTF( ( "Values after sec addition: tv_nsec=%ld, tv_sec=%d\n",
-                            pxResult->tv_nsec, pxResult->tv_sec ) );
-
             /* Check if addition resulted in an overflow. */
             if( ( pxResult->tv_sec < x->tv_sec ) || ( pxResult->tv_sec < y->tv_sec ) ||
                 ( pxResult->tv_sec < ullPartialSec ) )
@@ -234,7 +224,6 @@ int UTILS_TimespecAdd( const struct timespec * const x,
                 /* configPRINT_STRING( ( "Execution determines tv_sec is < 0\n" ) ); */
 
                 iStatus = 1;
-                configPRINTF( ( "Detected overflow in tv_sec: ReturnStatus=%d", iStatus ) );
             }
         }
     }
