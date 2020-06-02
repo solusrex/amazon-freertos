@@ -32,6 +32,6 @@
 
 #define IOT_LOG_LEVEL_HTTPS              IOT_LOG_DEBUG
 
-#define IOT_THREAD_DEFAULT_STACK_SIZE    4096
+#define IOT_THREAD_DEFAULT_STACK_SIZE    8192
 
 #endif /* ifndef IOT_CONFIG_H_ */
