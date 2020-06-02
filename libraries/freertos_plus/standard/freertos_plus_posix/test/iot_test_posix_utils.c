@@ -45,12 +45,13 @@
 #include "unity.h"
 
 /*-----------------------------------------------------------*/
-/* Constants that represent max values for signed and unsigned definitions of time_t */
-#define TIME_T_SIGNED_MAX      ( time_t ) ( ( ( time_t ) 1 << ( ( sizeof( time_t ) << 3 ) - 1 ) ) - 1 )
-#define TIME_T_UNSIGNED_MAX    ( ( time_t ) ~0 )
-
 static const struct timespec signedCheck = { .tv_sec = 1, .tv_nsec = 1 };
 static uint8_t isTimespecTvSecSigned;
+static uint8_t isTimespecTvNsecSigned;
+
+/* Constants that represent max values for signed and unsigned definitions of time_t */
+#define TIME_T_SIGNED_MAX      ( typeof( signedCheck.tv_sec ) )( ( ( typeof( signedCheck.tv_sec ) ) 1 << ( ( sizeof( signedCheck.tv_sec ) << 3 ) - 1 ) ) - 1 )
+#define TIME_T_UNSIGNED_MAX    ( ( time_t ) ~0 )
 
 /*-----------------------------------------------------------*/
 
@@ -61,6 +62,7 @@ TEST_GROUP( Full_POSIX_UTILS );
 TEST_SETUP( Full_POSIX_UTILS )
 {
     isTimespecTvSecSigned = ( ~signedCheck.tv_sec < 0 ) ? 1u : 0u;
+    isTimespecTvNsecSigned = ( ~signedCheck.tv_nsec < 0 ) ? 1u : 0u;
 }
 
 
@@ -109,7 +111,7 @@ TEST( Full_POSIX_UTILS, UTILS_TimespecAdd )
     }
 
     /* Test with invalid parameter check when tv_nsec < 0. */
-    if( isTimespecTvSecSigned == 1u )
+    if( isTimespecTvNsecSigned == 1u )
     {
         x.tv_sec = 0;
         y.tv_sec = 0;
