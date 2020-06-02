@@ -186,60 +186,38 @@ int UTILS_TimespecAdd( const struct timespec * const x,
                        const struct timespec * const y,
                        struct timespec * const pxResult )
 {
-    uint64_t ullPartialSec = 0;
+    int64_t llPartialSec = 0;
     int iStatus = 0;
 
-    /* Check input parameters. None of the parameters should be NULL,
-     * and the input parameters values should be positive. */
-    if( ( pxResult == NULL ) || ( x == NULL ) || ( y == NULL ) ||
-        ( x->tv_sec < 0 ) || ( x->tv_nsec < 0 ) ||
-        ( y->tv_sec < 0 ) || ( y->tv_nsec < 0 ) )
+    /* Check parameters. */
+    if( ( pxResult == NULL ) || ( x == NULL ) || ( y == NULL ) )
     {
         iStatus = -1;
     }
 
-    configPRINTF( ( "Input tv_sec values: x->tv_sec: %u, y->tv_sec:%u",
-                    x->tv_sec, y->tv_sec ) );
-
     if( iStatus == 0 )
     {
-        /* Perform addition for the nanoseconds member. */
+        /* Perform addition. */
         pxResult->tv_nsec = x->tv_nsec + y->tv_nsec;
 
-        configPRINTF( ( "Values after nsec addition: tv_nsec=%ld, tv_sec=%d\n",
-                        pxResult->tv_nsec, pxResult->tv_sec ) );
-
-        /* Check if the addition resulted in an overflow.*/
-        if( ( pxResult->tv_nsec < x->tv_nsec ) || ( pxResult->tv_nsec < y->tv_nsec ) )
+        /* check for overflow in case nsec value was invalid */
+        if( pxResult->tv_nsec < 0 )
         {
             iStatus = 1;
-            configPRINTF( ( "Detected overflow in tv_nsec: ReturnStatus=%d", iStatus ) );
         }
         else
         {
-            /* Prune the nanoseconds value to be less than NANOSECONDS_PER_SECOND. */
-            ullPartialSec = ( pxResult->tv_nsec ) / NANOSECONDS_PER_SECOND;
+            llPartialSec = ( pxResult->tv_nsec ) / NANOSECONDS_PER_SECOND;
             pxResult->tv_nsec = ( pxResult->tv_nsec ) % NANOSECONDS_PER_SECOND;
+            pxResult->tv_sec = x->tv_sec + y->tv_sec + llPartialSec;
 
-            /* Perform addition for the seconds member. */
-            pxResult->tv_sec = x->tv_sec + y->tv_sec + ullPartialSec;
-
-            configPRINTF( ( "Values after sec addition: tv_nsec=%ld, tv_sec=%d\n",
-                            pxResult->tv_nsec, pxResult->tv_sec ) );
-
-            /* Check if addition resulted in an overflow. */
-            if( ( pxResult->tv_sec < x->tv_sec ) || ( pxResult->tv_sec < y->tv_sec ) ||
-                ( pxResult->tv_sec < ullPartialSec ) )
+            /* check for overflow */
+            if( pxResult->tv_sec < 0 )
             {
-                /* configPRINT_STRING( ( "Execution determines tv_sec is < 0\n" ) ); */
-
                 iStatus = 1;
-                configPRINTF( ( "Detected overflow in tv_sec: ReturnStatus=%d", iStatus ) );
             }
         }
     }
-
-    configPRINTF( ( "Return Status at end of function: %d\n", iStatus ) );
 
     return iStatus;
 }
