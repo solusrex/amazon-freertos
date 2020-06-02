@@ -47,27 +47,27 @@
     extern uint32_t SystemCoreClock;
 #endif
 
-#define configSUPPORT_STATIC_ALLOCATION              1
+#define configSUPPORT_STATIC_ALLOCATION       1
 
-#define configUSE_PREEMPTION                         1
-#define configUSE_IDLE_HOOK                          1
-#define configUSE_TICK_HOOK                          1
-#define configUSE_TICKLESS_IDLE                      0
-#define configUSE_DAEMON_TASK_STARTUP_HOOK           1
-#define configCPU_CLOCK_HZ                           ( SystemCoreClock )
-#define configTICK_RATE_HZ                           ( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES                         ( 7 )
-#define configMINIMAL_STACK_SIZE                     ( ( uint16_t ) 100 )
-#define configTOTAL_HEAP_SIZE                        ( ( size_t ) ( 249 * 512 ) )
-#define configMAX_TASK_NAME_LEN                      ( 16 )
-#define configUSE_TRACE_FACILITY                     1
-#define configUSE_16_BIT_TICKS                       0
-#define configIDLE_SHOULD_YIELD                      1
-#define configUSE_MUTEXES  				             1
-#define configUSE_TASK_NOTIFICATIONS                 1
-#define configQUEUE_REGISTRY_SIZE                    8
-#if defined(__ICCARM__)
-#define configCHECK_FOR_STACK_OVERFLOW               0      // IAR
+#define configUSE_PREEMPTION                  1
+#define configUSE_IDLE_HOOK                   1
+#define configUSE_TICK_HOOK                   1
+#define configUSE_TICKLESS_IDLE               0
+#define configUSE_DAEMON_TASK_STARTUP_HOOK    1
+#define configCPU_CLOCK_HZ                    ( SystemCoreClock )
+#define configTICK_RATE_HZ                    ( ( TickType_t ) 1000 )
+#define configMAX_PRIORITIES                  ( 7 )
+#define configMINIMAL_STACK_SIZE              ( ( uint16_t ) 100 )
+#define configTOTAL_HEAP_SIZE                 ( ( size_t ) ( 249 * 512 ) )
+#define configMAX_TASK_NAME_LEN               ( 16 )
+#define configUSE_TRACE_FACILITY              1
+#define configUSE_16_BIT_TICKS                0
+#define configIDLE_SHOULD_YIELD               1
+#define configUSE_MUTEXES                     1
+#define configUSE_TASK_NOTIFICATIONS          1
+#define configQUEUE_REGISTRY_SIZE             8
+#if defined( __ICCARM__ )
+    #define configCHECK_FOR_STACK_OVERFLOW    0             /* IAR */
 #else
     #define configCHECK_FOR_STACK_OVERFLOW    2             /* Keil */
 #endif
@@ -144,14 +144,14 @@ void vLoggingPrintf( const char * pcFormat,
 #define configPRINTF( X )    vLoggingPrintf X
 
 /* Non-format version thread-safe print */
-#define configPRINT( X )    vLoggingPrint( X )
+#define configPRINT( X )     vLoggingPrint( X )
 
 /* Map the logging task's printf to the board specific retarget output function. */
 #define configPRINT_STRING                          printf
 
 /* Sets the length of the buffers into which logging messages are written - so
  * also defines the maximum length of each log message. */
-#define configLOGGING_MAX_MESSAGE_LENGTH            80
+#define configLOGGING_MAX_MESSAGE_LENGTH            192
 
 /* Set to 1 to prepend each log message with a message number, the task name,
  * and a time stamp. */
